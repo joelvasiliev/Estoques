@@ -14,7 +14,7 @@ export function Footer() {
                     </Link>
                 </div>
                 <div className="flex w-[415px] h-[20px]">
-                    <Image alt="copyright 2024 , all rights reserved" src={"/copyright.png"} width={415} height={20} objectFit="cover" />
+                    <Image alt="copyright 2024 , all rights reserved" src={"/foto-copyright.png"} width={415} height={20} objectFit="cover" />
                 </div>
             </div>
 
