@@ -9,24 +9,64 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
+import { useForm, useWatch } from 'react-hook-form'
 
 type Product = {
   id: string
   title: string
   description: string
-  quantityType: 'gramas' | 'quilos' | 'litros' | 'unidade'
-  quantity: number
+  amount_type: 'gramas' | 'quilos' | 'litros' | 'unidade'
+  amount: number
   photos: string[]
   videos: string[]
 }
 
 export default function EditarProduto() {
-    //TODO: criar um form e reaproveitar esse componente para tela de criação de produto também
     const {id} = useParams();
     const router = useRouter()
-    const [product, setProduct] = useState<Product | null>(null)
-    const [newPhotos, setNewPhotos] = useState<File[]>([])
-    const [newVideos, setNewVideos] = useState<File[]>([])
+
+    const form = useForm({
+        defaultValues: {
+            product: {
+                title: '',
+                description: '',
+                amount: 0,
+                amount_type: 'unit',
+                photos: [],
+                videos: []
+            }
+        }
+    })
+
+    const product = useWatch({
+        control: form.control,
+        name: 'product'
+    })
+    const title = useWatch({
+        control: form.control,
+        name: 'product.title'
+    })
+
+    const description = useWatch({
+        control: form.control,
+        name: 'product.description'
+    })
+    const amount = useWatch({
+        control: form.control,
+        name: 'product.amount'
+    })
+    const amount_type = useWatch({
+        control: form.control,
+        name: 'product.amount_type'
+    })
+    const photos = useWatch({
+        control: form.control,
+        name: 'product.photos'
+    })
+    const videos = useWatch({
+        control: form.control,
+        name: 'product.videos'
+    })
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -37,70 +77,54 @@ export default function EditarProduto() {
                 },
             })
 
-            const product = await res_product_by_id.json();
-            console.log(product)
+        const product = await res_product_by_id.json();
         
-        setProduct(product)
+        form.setValue("product.title", product.title)
+        form.setValue("product.description", product.description)
+        form.setValue("product.amount", product.amount)
+        form.setValue("product.amount_type", product.amount_type)
+        form.setValue("product.photos", product.photos)
+        form.setValue("product.videos", product.videos)
         }
         fetchProduct()
-    }, [id])
+    }, [form, id])
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        if (product) {
-        setProduct({ ...product, [e.target.name]: e.target.value })
-        }
-    }
-
-    const handleSelectChange = (value: string) => {
-        if (product) {
-        setProduct({ ...product, quantityType: value as Product['quantityType'] })
-        }
+    const handleSelectChange = (
+        form_label: "title" | "description" | "amount" | "amount_type" | "photos" | "videos",
+        value: string
+    ) => {
+        form.setValue(form_label, value as Product['amount_type'])
     }
 
     const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
-        setNewPhotos(prevPhotos => [...prevPhotos, ...Array.from(e.target.files as FileList)])
+            // upload para api do catbox
+            // atualizar form
         }
     }
 
     const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
-        setNewVideos(prevVideos => [...prevVideos, ...Array.from(e.target.files as FileList)])
+            // upload para api do catbox
+            // atualizar form
         }
     }
 
     const handleRemovePhoto = (index: number) => {
-        if (product) {
-        setProduct({
-            ...product,
-            photos: product.photos.filter((_, i) => i !== index)
-        })
-        }
     }
 
     const handleRemoveVideo = (index: number) => {
-        if (product) {
-        setProduct({
-            ...product,
-            videos: product.videos.filter((_, i) => i !== index)
-        })
-        }
     }
 
     const handleRemoveNewPhoto = (index: number) => {
-        setNewPhotos(newPhotos.filter((_, i) => i !== index))
     }
 
     const handleRemoveNewVideo = (index: number) => {
-        setNewVideos(newVideos.filter((_, i) => i !== index))
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
         try{
         e.preventDefault()
-        console.log('Produto atualizado:', product)
-        console.log('Novas fotos:', newPhotos)
-        console.log('Novos vídeos:', newVideos)
         await fetch(`/api/produtos/${id}`, {
             method: 'PUT',
             headers: {
@@ -121,6 +145,8 @@ export default function EditarProduto() {
         return <div className="flex justify-center items-center h-screen">Carregando...</div>
     }
 
+    
+
     return (
         <div className="container mx-auto p-4 h-full mt-20">
             <div className='w-full flex justify-between'>
@@ -131,10 +157,11 @@ export default function EditarProduto() {
             <div>
             <Label htmlFor="title">Título</Label>
             <Input
+                {...form.register('title')}
                 id="title"
                 name="title"
                 className='border border-black rounded-xl'
-                value={product.title}
+                value={title}
                 onChange={handleInputChange}
                 required
             />
@@ -144,16 +171,17 @@ export default function EditarProduto() {
             <Textarea   
                 className='rounded-xl'
                 id="description"
+                {...form.register('description')}
                 name="description"
-                value={product.description}
+                value={description}
                 onChange={handleInputChange}
                 required
             />
             </div>
             <div className="grid grid-cols-1 gap-8">
             <div >
-                <Label htmlFor="quantityType">Tipo de Quantidade</Label>
-                <Select onValueChange={handleSelectChange} value={product.quantityType}>
+                <Label htmlFor="amount_type">Tipo de Quantidade</Label>
+                <Select onValueChange={(e: any) => handleSelectChange("amount_type", e)} value={amount_type}>
                 <SelectTrigger className='border rounded-xl border-black flex text-start justify-start'>
                     <SelectValue placeholder="Selecione o tipo" />
                 </SelectTrigger>
@@ -166,15 +194,16 @@ export default function EditarProduto() {
                 </Select>
             </div>
             <div>
-                <Label htmlFor="quantity">Quantidade</Label>
+                <Label htmlFor="amount">Quantidade</Label>
                 <Input
-                id="quantity"
-                name="quantity"
-                type="number"
-                className='border border-black rounded-xl'
-                value={product.quantity}
-                onChange={handleInputChange}
-                required
+                    {...form.register('amount')}
+                    id="amount"
+                    name="amount"
+                    type="number"
+                    className='border border-black rounded-xl'
+                    value={amount}
+                    onChange={handleInputChange}
+                    required
                 />
             </div>
             </div>
