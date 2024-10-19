@@ -14,5 +14,5 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         </FormProvider>
       </body>
     </html>
-  );
+  )
 }
