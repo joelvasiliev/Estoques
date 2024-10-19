@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { Plus, X, Save } from 'lucide-react'
@@ -93,7 +93,7 @@ export default function EditarProduto() {
         form_label: "title" | "description" | "amount" | "amount_type" | "photos" | "videos",
         value: string
     ) => {
-        form.setValue(form_label, value as Product['amount_type'])
+        form.setValue(`product.${form_label}`, value as Product['amount_type'])
     }
 
     const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -145,8 +145,6 @@ export default function EditarProduto() {
         return <div className="flex justify-center items-center h-screen">Carregando...</div>
     }
 
-    
-
     return (
         <div className="container mx-auto p-4 h-full mt-20">
             <div className='w-full flex justify-between'>
@@ -157,12 +155,12 @@ export default function EditarProduto() {
             <div>
             <Label htmlFor="title">Título</Label>
             <Input
-                {...form.register('title')}
+                {...form.register('product.title')}
                 id="title"
                 name="title"
                 className='border border-black rounded-xl'
                 value={title}
-                onChange={handleInputChange}
+                onChange={(e: any) => {form.setValue('product.title', e.target.value)}}
                 required
             />
             </div>
@@ -171,10 +169,10 @@ export default function EditarProduto() {
             <Textarea   
                 className='rounded-xl'
                 id="description"
-                {...form.register('description')}
+                {...form.register('product.description')}
                 name="description"
                 value={description}
-                onChange={handleInputChange}
+                onChange={(e: any) => {form.setValue('product.description', e.target.value)}}
                 required
             />
             </div>
@@ -196,13 +194,13 @@ export default function EditarProduto() {
             <div>
                 <Label htmlFor="amount">Quantidade</Label>
                 <Input
-                    {...form.register('amount')}
+                    {...form.register('product.amount')}
                     id="amount"
                     name="amount"
                     type="number"
                     className='border border-black rounded-xl'
                     value={amount}
-                    onChange={handleInputChange}
+                    onChange={(e: any) => {form.setValue('product.amount', e.target.value)}}
                     required
                 />
             </div>
@@ -218,19 +216,6 @@ export default function EditarProduto() {
                     size="icon"
                     className="absolute top-0 right-0"
                     onClick={() => handleRemovePhoto(index)}
-                    >
-                    <X className="h-4 w-4" />
-                    </Button>
-                </div>
-                ))}
-                {newPhotos.map((photo, index) => (
-                <div key={`new-${index}`} className="relative">
-                    <Image src={URL.createObjectURL(photo)} alt={`Nova foto ${index + 1}`} width={100} height={100} className="rounded" />
-                    <Button
-                    variant="destructive"
-                    size="icon"
-                    className="absolute top-0 right-0"
-                    onClick={() => handleRemoveNewPhoto(index)}
                     >
                     <X className="h-4 w-4" />
                     </Button>
@@ -253,19 +238,6 @@ export default function EditarProduto() {
                     size="icon"
                     className="absolute top-0 right-0"
                     onClick={() => handleRemoveVideo(index)}
-                    >
-                    <X className="h-4 w-4" />
-                    </Button>
-                </div>
-                ))}
-                {newVideos.map((video, index) => (
-                <div key={`new-${index}`} className="relative">
-                    <video src={URL.createObjectURL(video)} width={100} height={100} className="rounded" />
-                    <Button
-                    variant="destructive"
-                    size="icon"
-                    className="absolute top-0 right-0"
-                    onClick={() => handleRemoveNewVideo(index)}
                     >
                     <X className="h-4 w-4" />
                     </Button>
