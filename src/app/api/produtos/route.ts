@@ -33,9 +33,6 @@ export async function POST(req: NextRequest) {
         amount,
         owner_id: user.id,
       },
-      include: {
-        owner: true,
-      },
     });
 
     return NextResponse.json({
@@ -53,7 +50,12 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
-  const products = await prisma.product.findMany();
+  const products = await prisma.product.findMany({
+    include: {
+      photos: true,
+      videos: true,
+    },
+  });
   return NextResponse.json(products);
 }
 

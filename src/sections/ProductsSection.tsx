@@ -7,10 +7,12 @@ import DeleteProductModal from '@/components/ConfirmDeleteProduct'
 import { CTooltip } from '@/components/Tooltip'
 import { ModalCreateProduct } from '@/components/ModalCreateProduct'
 import { Product } from '@/dto/product.dto'
+import { useRouter } from 'next/navigation'
 
 
 
 export function ProductsList() {
+  const router = useRouter();
   const session = useSession();
   const [products, setProducts] = useState<Product[]>([])
 
@@ -128,7 +130,7 @@ export function ProductsList() {
         </TableHeader>
         <TableBody>
           {products.map((product) => (
-            <TableRow key={product.id}>
+            <TableRow key={product.id} className='hover:bg-gray-400/20'>
               <TableCell className='max-w-[200px]'>{product.id}</TableCell>
               <TableCell className='w-[150px] text-wrap'>{product.name}</TableCell>
               <TableCell className='w-[250px] text-wrap'>{product.description}</TableCell>
@@ -136,7 +138,7 @@ export function ProductsList() {
               <TableCell className='w-[150px] text-wrap text-center'>{product.amount}</TableCell>
               <TableCell>
               <CTooltip label='Editar'>
-                <Button variant="ghost" size="icon">
+                <Button className='cursor-pointer' onClick={() => {router.push(`/painel/produtos/${product.id}`)}} variant="ghost" size="icon">
                   <Edit className="h-4 w-4" />
                 </Button>
               </CTooltip>
