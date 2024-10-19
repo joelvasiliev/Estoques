@@ -19,7 +19,7 @@ const handler = NextAuth({
   providers: [
     GoogleProvider({
       clientId: process.env.GCP_CLIENT_ID || "",
-      clientSecret: process.env.GPC_CLIENT_SECRET || "",
+      clientSecret: process.env.GCP_CLIENT_SECRET || "",
     }),
     EmailProvider({
       server: {
