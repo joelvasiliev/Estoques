@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -13,7 +12,7 @@ import {
 } from "@/components/ui/dialog"
 import { AlertTriangleIcon } from "lucide-react"
 
-export default function DeleteProductModal({product_id, children, open, setIsOpen, handleConfirmDelete}: {product_id: string, children: React.ReactNode, open: boolean, setIsOpen: any, handleConfirmDelete: any}) {
+export default function DeleteProductModal({product, children, open, setIsOpen, handleConfirmDelete}: { product: any, children: React.ReactNode, open: boolean, setIsOpen: any, handleConfirmDelete: any}) {
 
   return (
     <Dialog open={open} onOpenChange={setIsOpen}>
@@ -24,17 +23,18 @@ export default function DeleteProductModal({product_id, children, open, setIsOpe
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <AlertTriangleIcon className="text-destructive" size={20} />
-            Confirm Deletion
+            Confirma?
           </DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete the product? This action cannot be undone.
+            {`Você tem certeza que deseja excluir o produto ${product.name}?`}
+            {`${product.id}`}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="sm:justify-start">
           <Button type="button" variant="secondary" onClick={() => setIsOpen(false)}>
             Cancel
           </Button>
-          <Button type="button" variant="destructive" onClick={() => {handleConfirmDelete(product_id)}}>
+          <Button type="button" variant="destructive" onClick={handleConfirmDelete}>
             Delete
           </Button>
         </DialogFooter>

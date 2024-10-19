@@ -1,19 +1,10 @@
-"use client"
-
 import { useEffect, useState } from 'react'
 import { Plus, Edit, Trash2 } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
 import { useSession } from 'next-auth/react'
 import DeleteProductModal from '@/components/ConfirmDeleteProduct'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 
 type Product = {
   id: string
@@ -53,7 +44,8 @@ export function ProductsList() {
   }, []);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [openModals, setOpenModals] = useState<Record<string, boolean>>({})
+
   const [newProduct, setNewProduct] = useState<Omit<Product, 'id'>>({
     name: '',
     description: '',
@@ -85,6 +77,7 @@ export function ProductsList() {
   }
 
   const handleConfirmDelete = async (id: string) => {
+    console.log(id)
     await fetch('/api/produtos', {
         method: 'DELETE',
         headers: {
@@ -94,11 +87,22 @@ export function ProductsList() {
             id
         })
     })
-    setIsDeleteModalOpen(false)
+    setOpenModals((prev) => ({ ...prev, [id]: false })) 
     fetchProducts();
   }
 
-  
+  const formatType = (amount_type: string) => {
+    switch (amount_type){
+      case "unit":
+        return "Unitário"
+      case "grams":
+        return "Gramas"
+      case "liters":
+        return "Litros"
+      case "kilos":
+        return "Quilos (Kg)"
+    }
+  }
 
   return (
     <div className="container mx-auto p-4">
@@ -175,10 +179,11 @@ export function ProductsList() {
       </div>
       <Table>
         <TableHeader>
-          <TableRow>
+          <TableRow className='text-center'>
+            <TableHead>ID</TableHead>
             <TableHead>Título</TableHead>
             <TableHead>Descrição</TableHead>
-            <TableHead>Tipo de Quantidade</TableHead>
+            <TableHead>Tipo</TableHead>
             <TableHead>Quantidade</TableHead>
             <TableHead>Ações</TableHead>
           </TableRow>
@@ -186,21 +191,22 @@ export function ProductsList() {
         <TableBody>
           {products.map((product) => (
             <TableRow key={product.id}>
-              <TableCell>{product.name}</TableCell>
-              <TableCell>{product.description}</TableCell>
-              <TableCell>{product.amount_type}</TableCell>
-              <TableCell>{product.amount}</TableCell>
+              <TableCell className='max-w-[200px]'>{product.id}</TableCell>
+              <TableCell className='w-[150px] text-wrap'>{product.name}</TableCell>
+              <TableCell className='w-[250px] text-wrap'>{product.description}</TableCell>
+              <TableCell className='w-[125px] text-wrap'>{formatType(product.amount_type)}</TableCell>
+              <TableCell className='w-[150px] text-wrap text-center'>{product.amount}</TableCell>
               <TableCell>
                 <Button variant="ghost" size="icon">
                   <Edit className="h-4 w-4" />
                 </Button>
                 <DeleteProductModal
-                  product_id={product.id}
-                  open={isDeleteModalOpen}
-                  setIsOpen={setIsDeleteModalOpen}
+                  product={product}
+                  open={openModals[product.id] || false} 
+                  setIsOpen={(open: boolean) => setOpenModals((prev) => ({ ...prev, [product.id]: open }))}
                   handleConfirmDelete={() => handleConfirmDelete(product.id)}
                 >
-                  <Button variant="ghost" size="icon">
+                  <Button key={product.id} variant="ghost" size="icon">
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </DeleteProductModal>
