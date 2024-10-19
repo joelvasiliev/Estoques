@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Gilroy:wght@400;700&display=swap');
+
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/font/Gilroy-Regular.woff2') format('woff2'),
+       url('/font/Gilroy-Regular.woff') format('woff');
+  font-weight: 1400;
+  font-style: normal;
+}
+
+:root {
+    --gilroy: 'Gilroy', sans-serif;
+}
+
+body {
+    font-family: var(--gilroy);
+}
+
+.flight-animate-enter {
+  height: 150px;
+  transition: height 3000ms ease-in-out;
+}
+
+.flight-animate-enter-active {
+  height: 350px;
+}
+
+.flight-animate-exit {
+  height: 350px;
+  transition: height 3000ms ease-in-out;
+}
+
+.flight-animate-exit-active {
+  height: 150px;
+}
