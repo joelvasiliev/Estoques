@@ -51,6 +51,7 @@ model User {
   accounts              Account[]
   sessions              Session[]
   products              Product[]
+  Order                 Order[]
 }
 
 model Product {
@@ -59,10 +60,29 @@ model Product {
   owner          User     @relation(fields: [owner_id], references: [id])
   name           String   @db.VarChar(50)
   description    String   @db.VarChar(256)
+  total_price    Int
+  price_per_unit Int
+  price_per      String
   amount_type    String
   amount         Int
   photos                Photo[] 
   videos                Video[]
+  orders                Order[]
+}
+
+model Order {
+  id         String  @id @default(uuid())
+  product_id    String
+  product       Product @relation(fields: [product_id], references: [id])
+  user_id       String
+  user          User @relation(fields: [user_id], references: [id])
+  status        String
+  payment_type  String
+  amount        Int
+  delivered     Boolean
+  courier_id    String?
+
+  created_at    DateTime @default(now())
 }
 
 model Photo {

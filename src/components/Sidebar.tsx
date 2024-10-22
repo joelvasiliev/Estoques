@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowRight, ChartPie, CircleDollarSign, Home, Settings2, X } from "lucide-react";
+import { ArrowRight, BookText, ChartPie, CircleDollarSign, Home, Settings2, X } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { usePathname } from 'next/navigation';
@@ -33,18 +33,19 @@ export function Sidebar(){
                 {open && 
                     <div className="flex flex-col h-full">
                         <div id="sidebar-abas" className="flex flex-col ml-2 mt-12 p-2 space-y-4">
-                            <div onClick={() => {router.push('/painel')}} className={`flex w-full justify-between rounded-full p-3 cursor-pointer ${isCurrentPage("painel") && 'bg-gray-300/50'}`}>
-                                <p className="ml-4 flex items-center text-center text-foreground">Início</p>
+                            <div onClick={() => {router.push('/produtos')}} className={`flex w-full justify-between rounded-full p-3 cursor-pointer ${isCurrentPage("produtos") && 'bg-gray-300/50'}`}>
+                                <p className="ml-4 flex items-center text-center text-foreground">Produtos</p>
                                 <Home size={24}/>
-                            </div>
-                            <div onClick={() => {router.push('/graficos')}} className={`flex w-full justify-between rounded-full p-3 cursor-pointer ${isCurrentPage("graficos") && 'bg-gray-300/50'}`}>
-                                <p className="ml-4 flex items-center text-center text-foreground">Gráficos</p>
-                                <ChartPie size={24}/>
                             </div>
                             <div onClick={() => {router.push('/vendas')}} className={`flex w-full justify-between rounded-full p-3 cursor-pointer ${isCurrentPage("vendas") && 'bg-gray-300/50'}`}>
                                 <p className="ml-4 flex items-center text-center text-foreground">Vendas</p>
                                 <CircleDollarSign size={24}/>
                             </div>
+                            <div onClick={() => {router.push('/graficos')}} className={`flex w-full justify-between rounded-full p-3 cursor-pointer ${isCurrentPage("graficos") && 'bg-gray-300/50'}`}>
+                                <p className="ml-4 flex items-center text-center text-foreground">Gráficos</p>
+                                <ChartPie size={24}/>
+                            </div>
+                            
                         </div>
                     
                         <SettingsMenubar className="flex w-full justify-between items-end mt-auto">
@@ -60,7 +61,7 @@ export function Sidebar(){
                     !open &&
                     <div className="flex flex-col space-y-4 mt-12 h-full">
                         <div className="flex flex-col space-y-6">
-                            <Home className="cursor-pointer" onClick={() => {router.push('/painel')}} size={24}/>
+                            <Home className="cursor-pointer" onClick={() => {router.push('/produtos')}} size={24}/>
                             <ChartPie className="cursor-pointer" onClick={() => {router.push('/graficos')}} size={24}/>
                             <CircleDollarSign className="cursor-pointer" onClick={() => {router.push('/vendas')}} size={24}/>
                         </div>

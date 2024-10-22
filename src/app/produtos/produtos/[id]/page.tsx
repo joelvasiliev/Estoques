@@ -134,7 +134,7 @@ export default function EditarProduto() {
                 product
             })
         }).then(() => {
-            router.push('/painel')
+            router.push('/produtos')
         })
     }catch(e){
         console.error(e);
@@ -149,7 +149,7 @@ export default function EditarProduto() {
         <div className="container mx-auto p-4 h-full mt-20">
             <div className='w-full flex justify-between'>
                 <h1 className="text-2xl font-bold mb-4">Editar Produto</h1>
-                <X onClick={() => {router.push('/painel')}} className='cursor-pointer' size={32}/>
+                <X onClick={() => {router.push('/produtos')}} className='cursor-pointer' size={32}/>
             </div>
         <form onSubmit={handleSubmit} className="space-y-4">
             <div>

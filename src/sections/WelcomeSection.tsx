@@ -52,7 +52,7 @@ export const WelcomeSection = () => {
     };
     
   if(session.status === "authenticated") {
-    router.push('/painel')
+    router.push('/produtos')
     return;
   }
 

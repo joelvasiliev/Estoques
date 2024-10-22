@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog"
 import { AlertTriangleIcon } from "lucide-react"
 
-export default function DeleteProductModal({product, children, open, setIsOpen, handleConfirmDelete}: { product: any, children: React.ReactNode, open: boolean, setIsOpen: any, handleConfirmDelete: any}) {
+export default function ConfirmDeleteModal({label, children, open, setIsOpen, handleConfirmDelete}: { label: string, children: React.ReactNode, open: boolean, setIsOpen: any, handleConfirmDelete: any}) {
 
   return (
     <Dialog open={open} onOpenChange={setIsOpen}>
@@ -26,16 +26,15 @@ export default function DeleteProductModal({product, children, open, setIsOpen, 
             Confirma?
           </DialogTitle>
           <DialogDescription>
-            {`Você tem certeza que deseja excluir o produto ${product.name}?`}
-            {`${product.id}`}
+            {label}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="sm:justify-start">
           <Button type="button" variant="secondary" onClick={() => setIsOpen(false)}>
-            Cancel
+            Cancelar
           </Button>
           <Button type="button" variant="destructive" onClick={handleConfirmDelete}>
-            Delete
+            Deletar
           </Button>
         </DialogFooter>
       </DialogContent>

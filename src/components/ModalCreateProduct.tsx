@@ -3,9 +3,9 @@ import { Product } from '@/dto/product.dto';
 
 import React, { Dispatch, SetStateAction } from "react";
 import { Button } from './ui/button';
-import { Label } from './ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Input } from './ui/input';
+import { Label } from './ui/label';
 
 type ModalCreateProductProps = {
     children: React.ReactNode;
@@ -31,25 +31,40 @@ export function ModalCreateProduct({children, isDialogOpen, setIsDialogOpen, new
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
-                <label htmlFor="name" className="text-right">
+                <Label htmlFor="name" className="text-right">
                   Título
-                </label>
-                <input
+                </Label>
+                <Input
                   id="name"
                   value={newProduct.name}
                   onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
-                  className="col-span-3"
+                  className="col-span-3 border rounded-3xl"
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <label htmlFor="description" className="text-right">
+                <Label htmlFor="description" className="text-right">
                   Descrição
-                </label>
-                <input
+                </Label>
+                <Input
                   id="description"
                   value={newProduct.description}
                   onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
-                  className="col-span-3"
+                  className="col-span-3 border rounded-3xl"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="cost" className="text-right" >
+                  Custo
+                </Label>
+                <Input
+                  id="description"
+                  type='number'
+                  value={new Intl.NumberFormat('pt-BR', { 
+                    style: 'currency', 
+                    currency: 'BRL' 
+                  }).format(newProduct.total_cost)}
+                  onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+                  className="col-span-3 border rounded-3xl"
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
@@ -60,7 +75,7 @@ export function ModalCreateProduct({children, isDialogOpen, setIsDialogOpen, new
                   onValueChange={(value) => setNewProduct({ ...newProduct, amount_type: value as Product['amount_type'] })}
                   value={newProduct.amount_type}
                 >
-                  <SelectTrigger className="col-span-3">
+                  <SelectTrigger className="col-span-3 border rounded-3xl">
                     <SelectValue placeholder="Selecione o tipo" />
                   </SelectTrigger>
                   <SelectContent>
@@ -81,20 +96,40 @@ export function ModalCreateProduct({children, isDialogOpen, setIsDialogOpen, new
                   type="number"
                   value={newProduct.amount}
                   onChange={(e) => setNewProduct({ ...newProduct, amount: Number(e.target.value) })}
-                  className="col-span-3"
+                  className="col-span-3 border rounded-3xl"
                 />
               </div>
 
               <div className="grid grid-cols-4 items-center gap-4">
-                <label htmlFor="amount" className="text-right">
-                  Quantidade
-                </label>
-                <input
+                <Label htmlFor="amount_type" className="text-right">
+                  Preço por
+                </Label>
+                <Select
+                  onValueChange={(value) => setNewProduct({ ...newProduct, amount_type: value as Product['amount_type'] })}
+                  value={newProduct.price_per}
+                >
+                  <SelectTrigger className="col-span-3 border rounded-3xl">
+                    <SelectValue placeholder="Selecione o tipo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="grams">Gramas</SelectItem>
+                    <SelectItem value="kilos">Quilos</SelectItem>
+                    <SelectItem value="liters">Litros</SelectItem>
+                    <SelectItem value="unit">Unidade</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="amount" className="text-right">
+                  Preço
+                </Label>
+                <Input
                   id="amount"
                   type="number"
-                  value={newProduct.amount}
-                  onChange={(e) => setNewProduct({ ...newProduct, amount: Number(e.target.value) })}
-                  className="col-span-3"
+                  value={Number(newProduct.price_per_unit)}
+                  onChange={(e) => setNewProduct({ ...newProduct, price_per_unit: Number(e.target.value) })}
+                  className="col-span-3 border rounded-3xl"
                 />
               </div>
             </div>

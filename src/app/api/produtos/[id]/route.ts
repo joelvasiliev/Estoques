@@ -20,6 +20,7 @@ export async function GET(
       include: {
         photos: true,
         videos: true,
+        orders: true,
       },
     });
 

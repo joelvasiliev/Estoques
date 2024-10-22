@@ -3,16 +3,16 @@ import { Plus, Edit, Trash2 } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { useSession } from 'next-auth/react'
-import DeleteProductModal from '@/components/ConfirmDeleteProduct'
+import ConfirmDeleteModal from '@/components/ConfirmDelete'
 import { CTooltip } from '@/components/Tooltip'
 import { ModalCreateProduct } from '@/components/ModalCreateProduct'
 import { Product } from '@/dto/product.dto'
 import { useRouter } from 'next/navigation'
+import { TableProducts } from '@/components/TableProducts'
 
 
 
 export function ProductsList() {
-  const router = useRouter();
   const session = useSession();
   const [products, setProducts] = useState<Product[]>([])
 
@@ -42,39 +42,53 @@ export function ProductsList() {
 
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [openModals, setOpenModals] = useState<Record<string, boolean>>({})
+  
 
   const [newProduct, setNewProduct] = useState<Omit<Product, 'id'>>({
     name: '',
     description: '',
-    amount_type: 'unit',
+    amount_type: 'grams',
+    price_per: 'grams',
+    total_cost: 0,
+    price_per_unit: 0,
     amount: 0,
+    orders: []
   })
 
   const handleAddProduct = async () => {
+    try{
     setIsDialogOpen(false)
-    if(!session.data?.user.email) return;
-    const email = session.data.user.email;
-    const res_user = await fetch(`/api/usuarios/email/${email}`)
+    console.log('1')
+    // if(!session.data?.user.email) return;
+    // const email = session.data.user.email;
+    // const res_user = await fetch(`/api/usuarios/email/${email}`)
+    const res_user = await fetch(`/api/usuarios/email/joel.vasiliev.neto@gmail.com`)
     const user = await res_user.json();
-
+    const body = {
+      name: newProduct.name,
+      description: newProduct.description,
+      amount_type: newProduct.amount_type,
+      amount: newProduct.amount,
+      total_cost: newProduct.total_cost,
+      owner_id: user.id,
+      price_per_unit: newProduct.price_per_unit,
+      price_per: newProduct.price_per
+    }
     await fetch('/api/produtos', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        name: newProduct.name,
-        description: newProduct.description,
-        amount_type: newProduct.amount_type,
-        amount: newProduct.amount,
-        owner_id: user.id
-      })
+      body: JSON.stringify(body)
     })
-    fetchProducts();
+    await fetchProducts();
+  }
+  catch(e){
+    console.error(e)
+  }
   }
 
   const handleConfirmDelete = async (id: string) => {
-    console.log(id)
     await fetch('/api/produtos', {
         method: 'DELETE',
         headers: {
@@ -88,18 +102,7 @@ export function ProductsList() {
     fetchProducts();
   }
 
-  const formatType = (amount_type: string) => {
-    switch (amount_type){
-      case "unit":
-        return "Unitário"
-      case "grams":
-        return "Gramas"
-      case "liters":
-        return "Litros"
-      case "kilos":
-        return "Quilos (Kg)"
-    }
-  }
+  
 
   return (
     <div className="container mx-auto p-4">
@@ -117,48 +120,12 @@ export function ProductsList() {
           </Button>
         </ModalCreateProduct>
       </div>
-      <Table>
-        <TableHeader>
-          <TableRow className='text-center'>
-            <TableHead>ID</TableHead>
-            <TableHead>Título</TableHead>
-            <TableHead>Descrição</TableHead>
-            <TableHead>Tipo</TableHead>
-            <TableHead>Quantidade</TableHead>
-            <TableHead>Ações</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {products.map((product) => (
-            <TableRow key={product.id} className='hover:bg-gray-400/20'>
-              <TableCell className='max-w-[200px]'>{product.id}</TableCell>
-              <TableCell className='w-[150px] text-wrap'>{product.name}</TableCell>
-              <TableCell className='w-[250px] text-wrap'>{product.description}</TableCell>
-              <TableCell className='w-[125px] text-wrap'>{formatType(product.amount_type)}</TableCell>
-              <TableCell className='w-[150px] text-wrap text-center'>{product.amount}</TableCell>
-              <TableCell>
-              <CTooltip label='Editar'>
-                <Button className='cursor-pointer' onClick={() => {router.push(`/painel/produtos/${product.id}`)}} variant="ghost" size="icon">
-                  <Edit className="h-4 w-4" />
-                </Button>
-              </CTooltip>
-                <DeleteProductModal
-                  product={product}
-                  open={openModals[product.id] || false} 
-                  setIsOpen={(open: boolean) => setOpenModals((prev) => ({ ...prev, [product.id]: open }))}
-                  handleConfirmDelete={() => handleConfirmDelete(product.id)}
-                >
-                <CTooltip label='Deletar'>
-                  <Button key={product.id} variant="ghost" size="icon">
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </CTooltip>
-                </DeleteProductModal>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <TableProducts
+        handleConfirmDelete={handleConfirmDelete}
+        openModals={openModals}
+        products={products}
+        setOpenModals={setOpenModals}
+      />
     </div>
   )
 }

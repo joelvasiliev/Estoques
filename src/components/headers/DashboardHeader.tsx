@@ -35,7 +35,7 @@ export const DashboardHeader = ({
         />
         </Link>
         <div className="hidden md:flex justify-center text-white font-semibold items-center gap-10 w-[40%]">
-            <a href="/painel" className={`${darkMode && 'text-black'} ${page === "search" ? "text-[#005A5A]" : null} `}>Pesquisar</a>
+            <a href="/produtos" className={`${darkMode && 'text-black'} ${page === "search" ? "text-[#005A5A]" : null} `}>Pesquisar</a>
             <a href="/discovery" className={`${darkMode && 'text-black'} ${page === "discovery" ? "text-[#005A5A]" : null} `}>Ofertas</a>
             <a href="/membership" className={`${darkMode && 'text-black'} ${page === "membership" ? "text-[#005A5A]" : null} `}>Planos</a>
         </div>

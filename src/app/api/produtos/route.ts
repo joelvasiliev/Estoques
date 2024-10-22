@@ -1,15 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "../../../lib/prisma";
+import prisma from "@/lib/prisma";
 
 export async function POST(req: NextRequest) {
   const data = await req.json();
   try {
-    const { owner_id, name, description, amount_type, amount } = data;
+    const {
+      owner_id,
+      name,
+      description,
+      amount_type,
+      amount,
+      total_price,
+      price_per,
+      price_per_unit,
+    } = data;
     if (
       !owner_id ||
       !name ||
       !description ||
       !amount_type ||
+      !total_price ||
+      !price_per ||
+      !price_per_unit ||
       amount === undefined
     ) {
       throw new Error("Está faltando parâmetros");
@@ -30,8 +42,11 @@ export async function POST(req: NextRequest) {
         name,
         description,
         amount_type,
+        total_price,
         amount,
         owner_id: user.id,
+        price_per,
+        price_per_unit,
       },
     });
 
@@ -54,6 +69,7 @@ export async function GET(req: NextRequest) {
     include: {
       photos: true,
       videos: true,
+      orders: true,
     },
   });
   return NextResponse.json(products);

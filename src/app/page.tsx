@@ -14,7 +14,7 @@ const Home = () => {
     if (status === "loading") {
       setLoading(true);
     } else if (status === "authenticated") {
-      router.push('/painel');
+      router.push('/produtos');
     } else {
       setLoading(false);
     }
