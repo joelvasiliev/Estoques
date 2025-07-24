@@ -53,17 +53,14 @@ export function ModalCreateProduct({children, isDialogOpen, setIsDialogOpen, new
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="cost" className="text-right" >
+                <Label htmlFor="total_cost" className="text-right" >
                   Custo
                 </Label>
                 <Input
-                  id="description"
+                  id="total_cost"
                   type='number'
-                  value={new Intl.NumberFormat('pt-BR', { 
-                    style: 'currency', 
-                    currency: 'BRL' 
-                  }).format(newProduct.total_cost)}
-                  onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+                  value={newProduct.total_cost}
+                  onChange={(e) => setNewProduct({ ...newProduct, total_cost: Number(e.target.value) })}
                   className="col-span-3 border rounded-3xl"
                 />
               </div>

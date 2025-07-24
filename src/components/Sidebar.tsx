@@ -33,6 +33,10 @@ export function Sidebar(){
                 {open && 
                     <div className="flex flex-col h-full">
                         <div id="sidebar-abas" className="flex flex-col ml-2 mt-12 p-2 space-y-4">
+                            <div onClick={() => {router.push('/painel')}} className={`flex w-full justify-between rounded-full p-3 cursor-pointer ${isCurrentPage("produtos") && 'bg-gray-300/50'}`}>
+                                <p className="ml-4 flex items-center text-center text-foreground">Início</p>
+                                <Home size={24}/>
+                            </div>
                             <div onClick={() => {router.push('/produtos')}} className={`flex w-full justify-between rounded-full p-3 cursor-pointer ${isCurrentPage("produtos") && 'bg-gray-300/50'}`}>
                                 <p className="ml-4 flex items-center text-center text-foreground">Produtos</p>
                                 <Home size={24}/>

@@ -74,6 +74,7 @@ export function ProductsList() {
       price_per_unit: newProduct.price_per_unit,
       price_per: newProduct.price_per
     }
+    console.log(body)
     await fetch('/api/produtos', {
       method: 'POST',
       headers: {

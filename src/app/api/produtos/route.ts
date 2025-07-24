@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 
 export async function POST(req: NextRequest) {
   const data = await req.json();
+  console.log(data);
   try {
     const {
       owner_id,
@@ -10,16 +11,15 @@ export async function POST(req: NextRequest) {
       description,
       amount_type,
       amount,
-      total_price,
+      total_cost,
       price_per,
       price_per_unit,
     } = data;
     if (
       !owner_id ||
       !name ||
-      !description ||
       !amount_type ||
-      !total_price ||
+      !total_cost ||
       !price_per ||
       !price_per_unit ||
       amount === undefined
@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
         name,
         description,
         amount_type,
-        total_price,
+        total_price: total_cost,
         amount,
         owner_id: user.id,
         price_per,

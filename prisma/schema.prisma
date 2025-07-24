@@ -59,7 +59,7 @@ model Product {
   owner_id       String
   owner          User     @relation(fields: [owner_id], references: [id])
   name           String   @db.VarChar(50)
-  description    String   @db.VarChar(256)
+  description    String?   @db.VarChar(256)
   total_price    Int
   price_per_unit Int
   price_per      String
